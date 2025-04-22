@@ -38,4 +38,14 @@ class ClassSessionService
     {
         return $this->repo->getByCourse($courseId);
     }
+
+    public function startMeeting($sessionId)
+    {
+        $session = \App\Models\ClassSession::findOrFail($sessionId);
+
+        $meetingLink = "https://meet.jit.si/LMS-Class-{$session->id}-" . time();
+        $session->update(['meeting_link' => $meetingLink]);
+
+        return $session;
+    }
 }

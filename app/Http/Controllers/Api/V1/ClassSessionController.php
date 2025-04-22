@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GenerateClassScheduleRequest;
 use App\Models\Course;
 use App\Services\ClassSessionService;
+use Illuminate\Http\Request;
 
 class ClassSessionController extends Controller
 {
@@ -21,5 +22,14 @@ class ClassSessionController extends Controller
     {
         $sessions = $this->service->listByCourse($course->id);
         return response()->json($sessions);
+    }
+
+    public function startMeeting(Request $request, $sessionId)
+    {
+        $session = $this->service->startMeeting($sessionId);
+        return response()->json([
+            'message' => 'Meeting started',
+            'link' => $session->meeting_link,
+        ]);
     }
 }

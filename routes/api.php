@@ -43,6 +43,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('/class-sessions/generate', [ClassSessionController::class, 'generate']);
     Route::get('/courses/{course}/class-sessions', [ClassSessionController::class, 'index']);
+    Route::post('/class-sessions/{sessionId}/start-meeting', [ClassSessionController::class, 'startMeeting']);
 });
 
 
