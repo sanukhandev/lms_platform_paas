@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\V1\PaymentPlanController;
 use App\Http\Controllers\Api\V1\StudentPaymentController;
 use App\Http\Controllers\Api\V1\ClassSessionController;
 use App\Http\Controllers\Api\V1\StudentAttendanceController;
+use App\Http\Controllers\Api\V1\StudentDashboardController;
+
 
 
 Route::get('/user', function (Request $request) {
@@ -51,4 +53,13 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('/attendance', [StudentAttendanceController::class, 'mark']); // Admin/Instructor
     Route::get('/attendance/session/{sessionId}', [StudentAttendanceController::class, 'sessionAttendance']); // Instructor view
     Route::get('/attendance/my', [StudentAttendanceController::class, 'myAttendance']); // Student view
+});
+
+
+
+Route::middleware(['auth:sanctum', 'role:student'])->prefix('v1/student')->group(function () {
+    Route::get('/my-courses', [StudentDashboardController::class, 'myCourses']);
+    Route::get('/my-payments', [StudentDashboardController::class, 'myPayments']);
+    Route::get('/my-attendance', [StudentDashboardController::class, 'myAttendance']);
+    Route::get('/upcoming-classes', [StudentDashboardController::class, 'upcomingClasses']);
 });
