@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\User;
 
 class StudentAttendanceResource extends JsonResource
 {
@@ -21,5 +22,10 @@ class StudentAttendanceResource extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at,
         ];
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(User::class, 'student_id');
     }
 }

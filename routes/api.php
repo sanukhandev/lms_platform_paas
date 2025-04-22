@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\V1\StudentPaymentController;
 use App\Http\Controllers\Api\V1\ClassSessionController;
 use App\Http\Controllers\Api\V1\StudentAttendanceController;
 use App\Http\Controllers\Api\V1\StudentDashboardController;
+use App\Http\Controllers\Api\V1\InstructorDashboardController;
+
 
 
 
@@ -62,4 +64,13 @@ Route::middleware(['auth:sanctum', 'role:student'])->prefix('v1/student')->group
     Route::get('/my-payments', [StudentDashboardController::class, 'myPayments']);
     Route::get('/my-attendance', [StudentDashboardController::class, 'myAttendance']);
     Route::get('/upcoming-classes', [StudentDashboardController::class, 'upcomingClasses']);
+});
+
+
+
+Route::middleware(['auth:sanctum', 'role:instructor'])->prefix('v1/instructor')->group(function () {
+    Route::get('/my-courses', [InstructorDashboardController::class, 'myCourses']);
+    Route::get('/upcoming-sessions', [InstructorDashboardController::class, 'upcomingSessions']);
+    Route::get('/session/{sessionId}/attendance', [InstructorDashboardController::class, 'sessionAttendance']);
+    Route::post('/session/{sessionId}/attendance', [InstructorDashboardController::class, 'markAttendance']);
 });
