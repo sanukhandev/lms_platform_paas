@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\CourseRequestController;
 use App\Http\Controllers\Api\V1\PaymentPlanController;
 use App\Http\Controllers\Api\V1\StudentPaymentController;
 use App\Http\Controllers\Api\V1\ClassSessionController;
+use App\Http\Controllers\Api\V1\StudentAttendanceController;
 
 
 Route::get('/user', function (Request $request) {
@@ -42,4 +43,11 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('/class-sessions/generate', [ClassSessionController::class, 'generate']);
     Route::get('/courses/{course}/class-sessions', [ClassSessionController::class, 'index']);
+});
+
+
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+    Route::post('/attendance', [StudentAttendanceController::class, 'mark']); // Admin/Instructor
+    Route::get('/attendance/session/{sessionId}', [StudentAttendanceController::class, 'sessionAttendance']); // Instructor view
+    Route::get('/attendance/my', [StudentAttendanceController::class, 'myAttendance']); // Student view
 });
