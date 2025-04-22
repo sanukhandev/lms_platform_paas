@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\V1\ClassSessionController;
 use App\Http\Controllers\Api\V1\StudentAttendanceController;
 use App\Http\Controllers\Api\V1\StudentDashboardController;
 use App\Http\Controllers\Api\V1\InstructorDashboardController;
+use App\Http\Controllers\Api\V1\AdminDashboardController;
+
 
 
 
@@ -73,4 +75,13 @@ Route::middleware(['auth:sanctum', 'role:instructor'])->prefix('v1/instructor')-
     Route::get('/upcoming-sessions', [InstructorDashboardController::class, 'upcomingSessions']);
     Route::get('/session/{sessionId}/attendance', [InstructorDashboardController::class, 'sessionAttendance']);
     Route::post('/session/{sessionId}/attendance', [InstructorDashboardController::class, 'markAttendance']);
+});
+
+
+
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('v1/admin')->group(function () {
+    Route::get('/overview', [AdminDashboardController::class, 'overview']);
+    Route::get('/pending-requests', [AdminDashboardController::class, 'pendingRequests']);
+    Route::get('/payment-summary', [AdminDashboardController::class, 'paymentSummary']);
+    Route::get('/upcoming-sessions', [AdminDashboardController::class, 'upcomingSessions']);
 });
