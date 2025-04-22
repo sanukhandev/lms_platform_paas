@@ -13,7 +13,8 @@ use App\Http\Controllers\Api\V1\{
     StudentDashboardController,
     InstructorDashboardController,
     AdminDashboardController,
-    CourseMaterialController
+    CourseMaterialController,
+    AuthController
 };
 
 // ✅ Authenticated User Info
@@ -80,4 +81,11 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::post('/materials/upload', [CourseMaterialController::class, 'upload']);
     Route::get('/materials/{courseId}', [CourseMaterialController::class, 'list']);
     Route::get('/materials/download/{id}', [CourseMaterialController::class, 'download'])->name('materials.download');
+});
+
+
+
+Route::prefix('v1')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
