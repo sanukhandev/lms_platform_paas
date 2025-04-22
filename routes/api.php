@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\CourseRequestController;
 use App\Http\Controllers\Api\V1\PaymentPlanController;
 use App\Http\Controllers\Api\V1\StudentPaymentController;
+use App\Http\Controllers\Api\V1\ClassSessionController;
 
 
 Route::get('/user', function (Request $request) {
@@ -35,4 +36,10 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('/student-payments', [StudentPaymentController::class, 'index']);
     Route::post('/student-payments', [StudentPaymentController::class, 'store']); // admin only
+});
+
+
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+    Route::post('/class-sessions/generate', [ClassSessionController::class, 'generate']);
+    Route::get('/courses/{course}/class-sessions', [ClassSessionController::class, 'index']);
 });
