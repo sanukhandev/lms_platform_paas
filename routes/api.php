@@ -12,7 +12,8 @@ use App\Http\Controllers\Api\V1\{
     StudentAttendanceController,
     StudentDashboardController,
     InstructorDashboardController,
-    AdminDashboardController
+    AdminDashboardController,
+    CourseMaterialController
 };
 
 // ✅ Authenticated User Info
@@ -72,4 +73,11 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('v1/admin')->group(fun
     Route::get('/pending-requests', [AdminDashboardController::class, 'pendingRequests']);
     Route::get('/payment-summary', [AdminDashboardController::class, 'paymentSummary']);
     Route::get('/upcoming-sessions', [AdminDashboardController::class, 'upcomingSessions']);
+});
+
+
+Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
+    Route::post('/materials/upload', [CourseMaterialController::class, 'upload']);
+    Route::get('/materials/{courseId}', [CourseMaterialController::class, 'list']);
+    Route::get('/materials/download/{id}', [CourseMaterialController::class, 'download'])->name('materials.download');
 });
