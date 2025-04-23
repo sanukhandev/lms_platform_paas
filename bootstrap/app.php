@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'auth:sanctum' => \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
+        $middleware->group('api', [
+            \Illuminate\Http\Middleware\HandleCors::class,
+
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
