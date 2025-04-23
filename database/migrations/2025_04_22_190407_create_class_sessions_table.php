@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('class_date');
             $table->time('start_time');
             $table->time('end_time');
-            $table->string('meeting_link')->nullable(); // For Jitsi
+            $table->string('meeting_link')->nullable();
             $table->timestamps();
         });
     }
