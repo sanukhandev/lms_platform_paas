@@ -1,57 +1,17 @@
-name: 🚀 Best Laravel Deploy to Hostinger
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout latest code
-      uses: actions/checkout@v4
-
-    - name: Install PHP and Composer
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: 8.2
-
-    - name: Install Composer dependencies
-      run: |
-        composer install --no-dev --optimize-autoloader
-
-    - name: Laravel - Optimize Caches
-      run: |
-        php artisan migrate 
-        php artisan config:cache
-        php artisan route:cache
-        php artisan view:cache
-
-    - name: Remove unnecessary files
-      run: |
-        rm -rf node_modules
-        rm -rf tests
-        rm -rf resources/js
-        rm -rf resources/css
-
-    - name: Upload Application to Hostinger via FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: ./
-        local-dir: ./
-        dangerous-clean-slate: false
-        exclude: |
-          **/.git*
-          **/node_modules/**
-          **/tests/**
-          **/deploy_files/**
-          .github/
-          README.md
-          .env
-
-   
+- name: Upload Laravel app to Hostinger (root folder)
+  uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+  with:
+    server: ${{ secrets.FTP_SERVER }}
+    username: ${{ secrets.FTP_USERNAME }}
+    password: ${{ secrets.FTP_PASSWORD }}
+    server-dir: ./
+    local-dir: ./
+    dangerous-clean-slate: false
+    exclude: |
+      **/.git*
+      **/node_modules/**
+      **/tests/**
+      **/deploy_files/**
+      .github/
+      README.md
+      .env
