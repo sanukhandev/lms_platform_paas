@@ -1,17 +1,30 @@
-- name: Upload Laravel app to Hostinger (root folder)
-  uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-  with:
-    server: ${{ secrets.FTP_SERVER }}
-    username: ${{ secrets.FTP_USERNAME }}
-    password: ${{ secrets.FTP_PASSWORD }}
-    server-dir: ./
-    local-dir: ./
-    dangerous-clean-slate: false
-    exclude: |
-      **/.git*
-      **/node_modules/**
-      **/tests/**
-      **/deploy_files/**
-      .github/
-      README.md
-      .env
+  name: Upload Laravel app to Hostinger (root folder)
+  
+  on:
+    push:
+      branches:
+        - main
+  
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+  
+        - name: Deploy via FTP
+          uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+          with:
+            server: ${{ secrets.FTP_SERVER }}
+            username: ${{ secrets.FTP_USERNAME }}
+            password: ${{ secrets.FTP_PASSWORD }}
+            local-dir: ./
+            dangerous-clean-slate: false
+            exclude: |
+              **/.git*
+              **/node_modules/**
+              **/tests/**
+              **/deploy_files/**
+              .github/
+              README.md
+              .env
