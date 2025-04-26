@@ -3,47 +3,55 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreInstructorRequest;
+use App\Http\Requests\UpdateInstructorRequest;
+use App\Http\Resources\InstructorResource;
+use App\Models\User;
+use App\Repositories\InstructorRepository;
 use Illuminate\Http\Request;
 
 class InstructorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $instructors;
+
+    public function __construct(InstructorRepository $instructors)
+    {
+        $this->instructors = $instructors;
+    }
+
     public function index()
     {
-        //
+        $instructors = $this->instructors->all();
+        return InstructorResource::collection($instructors);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreInstructorRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data['password'] = bcrypt($data['password']);
+        $instructor = $this->instructors->create($data);
+        return new InstructorResource($instructor);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $instructor = $this->instructors->find($id);
+        return new InstructorResource($instructor);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateInstructorRequest $request, User $instructor)
     {
-        //
+        $data = $request->validated();
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        }
+        $this->instructors->update($instructor, $data);
+        return new InstructorResource($instructor);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(User $instructor)
     {
-        //
+        $this->instructors->delete($instructor);
+        return response()->json(['message' => 'Instructor deleted successfully']);
     }
 }
