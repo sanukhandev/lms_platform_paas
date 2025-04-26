@@ -25,7 +25,7 @@ class StoreInstructorRequest extends FormRequest
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
             'phone'    => 'nullable|string|max:20|unique:users,phone',
-            'secondary_phone' => 'nullable|string|unique:users,secondary_phone',
+            'secondry_phone' => 'nullable|string|unique:users,secondary_phone',
         ];
     }
 }

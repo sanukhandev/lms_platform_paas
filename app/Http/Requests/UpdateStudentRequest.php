@@ -11,7 +11,7 @@ class UpdateStudentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return \Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()?->role === 'admin';
     }
 
     /**
@@ -25,7 +25,7 @@ class UpdateStudentRequest extends FormRequest
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
             'phone'    => 'nullable|string|max:20|unique:users,phone',
-            'secondary_phone' => 'nullable|string|max:20|unique:users,secondary_phone',
+            'secondry_phone' => 'nullable|string|max:20|unique:users,secondary_phone',
         ];
     }
 }

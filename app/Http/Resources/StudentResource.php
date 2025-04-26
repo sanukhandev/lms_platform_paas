@@ -19,7 +19,7 @@ class StudentResource extends JsonResource
             'name'       => $this->name,
             'email'      => $this->email,
             'phone'      => $this->phone,
-            'secondary_phone' => $this->secondary_phone,
+            'secondry_phone' => $this->secondary_phone,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
