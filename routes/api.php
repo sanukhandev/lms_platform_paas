@@ -14,7 +14,9 @@ use App\Http\Controllers\Api\V1\{
     InstructorDashboardController,
     AdminDashboardController,
     CourseMaterialController,
-    AuthController
+    AuthController,
+    InstructorController,
+    StudentController
 };
 
 // ✅ Authenticated User Info
@@ -27,6 +29,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     // 🧑‍🏫 Course Management
     Route::apiResource('courses', CourseController::class);
+    Route::apiResource('instructor', InstructorController::class);
+    Route::apiResource('students', StudentController::class);
+
 
     // 🧑‍🎓 Course Enrollment Requests
     Route::get('/course-requests', [CourseRequestController::class, 'index']);
