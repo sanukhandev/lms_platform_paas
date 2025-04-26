@@ -11,7 +11,7 @@ class UpdateInstructorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return \Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()?->role === 'admin';
     }
 
     /**
