@@ -24,7 +24,8 @@ class UpdateInstructorRequest extends FormRequest
         return [
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
-            'phone'    => 'nullable|string|max:20',
+            'phone'    => 'nullable|string|max:20|unique:users,phone',
+            'secondary_phone' => 'nullable|string|max:20|unique:users,secondary_phone',
         ];
     }
 }

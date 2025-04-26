@@ -24,8 +24,8 @@ class StoreInstructorRequest extends FormRequest
         return [
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
-            'phone'    => 'nullable|string|max:20',
-            'secondary_phone' => 'nullable|email|unique:users,secondary_email',
+            'phone'    => 'nullable|string|max:20|unique:users,phone',
+            'secondary_phone' => 'nullable|email|unique:users,secondary_phone',
         ];
     }
 }
