@@ -28,7 +28,8 @@ class StudentController extends Controller
     public function store(StoreStudentRequest $request)
     {
         $data = $request->validated();
-        $data['password'] = bcrypt($data['password']);
+        $data['password'] = bcrypt('password'); // Default password, change as needed
+        $data['role'] = 'student'; // Set role to student
         $student = $this->students->create($data);
         return new StudentResource($student);
     }
