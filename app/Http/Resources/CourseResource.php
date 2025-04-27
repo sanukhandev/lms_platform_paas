@@ -12,6 +12,8 @@ class CourseResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+
+
     public function toArray($request): array
     {
         return [
@@ -23,4 +25,4 @@ class CourseResource extends JsonResource
             'instructor' => $this->whenLoaded('instructor'),
         ];
     }
-    }
+}

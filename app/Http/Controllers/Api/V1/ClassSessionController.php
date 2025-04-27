@@ -7,6 +7,7 @@ use App\Http\Requests\GenerateClassScheduleRequest;
 use App\Models\Course;
 use App\Services\ClassSessionService;
 use Illuminate\Http\Request;
+use App\Http\Resources\ClassSessionResource;
 
 class ClassSessionController extends Controller
 {
@@ -18,10 +19,11 @@ class ClassSessionController extends Controller
         return response()->json(['message' => 'Class schedule generated']);
     }
 
-    public function index(Course $course)
+    public function index($id)
     {
-        $sessions = $this->service->listByCourse($course->id);
-        return response()->json($sessions);
+        return ClassSessionResource::collection(
+            $this->service->listByCourse($id)
+        );
     }
 
     public function startMeeting(Request $request, $sessionId)

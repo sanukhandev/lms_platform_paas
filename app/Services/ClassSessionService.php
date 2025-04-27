@@ -12,8 +12,8 @@ class ClassSessionService
     public function generate(array $data)
     {
         $start = Carbon::parse($data['start_date']);
-        $end = $start->copy()->addWeeks($data['duration_weeks']);
-        $daysOfWeek = $data['days_of_week'];
+        $end = $start->copy()->addWeeks((int) $data['duration_weeks']); // CAST TO INT here
+        $daysOfWeek = $data['days_of_week'] ?? [];
 
         $sessions = [];
 
@@ -33,6 +33,7 @@ class ClassSessionService
 
         return $this->repo->bulkInsert($sessions);
     }
+
 
     public function listByCourse($courseId)
     {

@@ -11,7 +11,7 @@ class GenerateClassScheduleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return \Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()?->role === 'admin';
     }
 
     /**
@@ -24,8 +24,8 @@ class GenerateClassScheduleRequest extends FormRequest
         return [
             'course_id' => 'required|exists:courses,id',
             'start_date' => 'required|date',
-            'days_of_week' => 'required|array',
-            'days_of_week.*' => 'in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'days_of_week' => 'required|array|min:1',
+            'days_of_week.*' => 'required|string|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'duration_weeks' => 'required|integer|min:1',
