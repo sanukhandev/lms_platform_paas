@@ -16,4 +16,8 @@ class ClassSessionRepository
 
         return ClassSession::with('course.instructor')->where('course_id', $courseId)->orderBy('class_date')->get();
     }
+    public function getById($sessionId)
+    {
+        return ClassSession::with('course.instructor')->findOrFail($sessionId);
+    }
 }

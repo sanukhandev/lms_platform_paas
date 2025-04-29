@@ -26,6 +26,12 @@ class ClassSessionController extends Controller
         );
     }
 
+    public function getSessionById($sessionId)
+    {
+        $session = $this->service->getSessionById($sessionId);
+        return new ClassSessionResource($session);
+    }
+
     public function startMeeting(Request $request, $sessionId)
     {
         $session = $this->service->startMeeting($sessionId);
