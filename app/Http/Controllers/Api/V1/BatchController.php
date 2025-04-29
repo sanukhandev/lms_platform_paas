@@ -23,11 +23,14 @@ class BatchController extends Controller
     public function show($id)
     {
         $batch = $this->service->find($id);
+        $batch->load(['students', 'classSessions']);
         return new BatchResource($batch);
     }
 
     public function store(BatchStoreRequest $request)
     {
+
+        $request->validated();
         $data = [
             ...$request->only([
                 'course_id',
@@ -35,6 +38,7 @@ class BatchController extends Controller
                 'start_date',
                 'end_date'
             ]),
+            'student_ids' => $request->input('student_ids'),
             'session_days' => $request->input('session_days'),
             'session_start_time' => $request->input('session_time.start'),
             'session_end_time' => $request->input('session_time.end'),

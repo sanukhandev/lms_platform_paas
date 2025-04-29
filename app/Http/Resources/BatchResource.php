@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\ClassSessionResource;
+use App\Http\Resources\UserResource;
 
 class BatchResource extends JsonResource
 {
@@ -24,6 +25,7 @@ class BatchResource extends JsonResource
             'session_days' => $this->session_days,
             'session_start_time' => $this->session_start_time,
             'session_end_time' => $this->session_end_time,
+            'students' => UserResource::collection($this->whenLoaded('students')),
             'class_sessions' => ClassSessionResource::collection($this->whenLoaded('classSessions')),
         ];
     }

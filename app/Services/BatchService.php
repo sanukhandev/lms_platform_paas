@@ -8,6 +8,7 @@ use App\Repositories\BatchRepository;
 use App\Repositories\CourseRepository;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\Log;
 
 class BatchService
 {
@@ -25,8 +26,27 @@ class BatchService
 
     public function create(array $data)
     {
-        return $this->repo->store($data);
+        $studentIds = $data['student_ids'] ?? [];
+        if (!empty($studentIds)) {
+            $studentIds = array_map('intval', $studentIds);
+            $data['student_ids'] = $studentIds;
+        }
+        unset($data['student_ids']);
+
+        $batch = $this->repo->store($data);
+
+        if (!empty($studentIds)) {
+            $pivotData = collect($studentIds)->mapWithKeys(fn($id) => [
+                $id => ['status' => 'active']
+            ])->toArray();
+
+            $batch->students()->attach($pivotData);
+        }
+
+        return $batch;
     }
+
+
 
     public function update(Batch $batch, array $data)
     {

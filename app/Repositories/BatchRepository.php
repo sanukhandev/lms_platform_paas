@@ -13,7 +13,7 @@ class BatchRepository
 
     public function all(): Collection
     {
-        return Batch::with('course', 'classSessions')->get();
+        return Batch::with('course', 'classSessions', 'students')->get();
     }
 
     public function paginated(int $perPage = 10): LengthAwarePaginator
@@ -39,7 +39,7 @@ class BatchRepository
 
     public function find(int $id): Batch
     {
-        return Batch::with('course', 'classSessions')->findOrFail($id);
+        return Batch::with('course', 'classSessions', 'students')->findOrFail($id);
     }
 
     public function findByCourse(int $courseId): Collection
