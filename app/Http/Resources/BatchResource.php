@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ClassSessionResource;
 
 class BatchResource extends JsonResource
 {
@@ -14,6 +15,16 @@ class BatchResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'course_id' => $this->course_id,
+            'name' => $this->name,
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
+            'session_days' => $this->session_days,
+            'session_start_time' => $this->session_start_time,
+            'session_end_time' => $this->session_end_time,
+            'class_sessions' => ClassSessionResource::collection($this->whenLoaded('classSessions')),
+        ];
     }
 }

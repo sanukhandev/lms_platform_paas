@@ -22,7 +22,14 @@ class BatchStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'course_id' => 'required|exists:courses,id',
+            'name' => 'required|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'session_days' => 'required|array',
+            'session_days.*' => 'string|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'session_start_time' => 'required|date_format:H:i',
+            'session_end_time' => 'required|date_format:H:i|after:session_start_time',
         ];
     }
 }
