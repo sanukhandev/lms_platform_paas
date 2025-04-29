@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     // 🧑‍🏫 Course Management
     Route::apiResource('courses', CourseController::class);
-    Route::apiResource('instructor', InstructorController::class);
+    Route::apiResource('instructors', InstructorController::class);
     Route::apiResource('students', StudentController::class);
 
 
@@ -49,6 +49,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     // 🗓️ Class Sessions
     Route::post('/class-sessions/generate', [ClassSessionController::class, 'generate']);
     Route::get('/courses/{course}/class-sessions', [ClassSessionController::class, 'index']);
+    Route::get('/courses/class-sessions/{sessionId}', [ClassSessionController::class, 'getSessionById']);
     Route::post('/class-sessions/{sessionId}/start-meeting', [ClassSessionController::class, 'startMeeting']);
 
     // 📝 Attendance

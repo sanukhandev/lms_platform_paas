@@ -4,16 +4,20 @@ namespace App\Services;
 
 use App\Repositories\ClassSessionRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 
 class ClassSessionService
 {
+    private const MEETING_HOST = 'https://meetservice.dw-digitalplatforms.in';
+    private const MEETING_PATH = '/LMS-Class-';
+
     public function __construct(protected ClassSessionRepository $repo) {}
 
     public function generate(array $data)
     {
         $start = Carbon::parse($data['start_date']);
-        $end = $start->copy()->addWeeks($data['duration_weeks']);
-        $daysOfWeek = $data['days_of_week'];
+        $end = $start->copy()->addWeeks((int) $data['duration_weeks']);
+        $daysOfWeek = $data['days_of_week'] ?? [];
 
         $sessions = [];
 
@@ -39,11 +43,18 @@ class ClassSessionService
         return $this->repo->getByCourse($courseId);
     }
 
+    public function getSessionById($sessionId)
+    {
+        $session = $this->repo->getById($sessionId);
+        if ($session) {
+            return $session;
+        }
+    }
+
     public function startMeeting($sessionId)
     {
         $session = \App\Models\ClassSession::findOrFail($sessionId);
-
-        $meetingLink = "https://meet.jit.si/LMS-Class-{$session->id}-" . time();
+        $meetingLink = self::MEETING_HOST . self::MEETING_PATH . "{$session->id}-" . time();
         $session->update(['meeting_link' => $meetingLink]);
 
         return $session;

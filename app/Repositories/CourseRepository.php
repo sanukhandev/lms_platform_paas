@@ -26,4 +26,9 @@ class CourseRepository
     {
         return $course->delete();
     }
+
+    public function find($id)
+    {
+        return Course::with('instructor')->findOrFail($id);
+    }
 }

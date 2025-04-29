@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use App\Services\CourseService;
+use Illuminate\Support\Facades\Log;
 
 class CourseController extends Controller
 {
@@ -23,9 +24,13 @@ class CourseController extends Controller
         $course = $this->service->create($request->validated());
         return new CourseResource($course);
     }
-
-    public function show(Course $course)
+    
+    public function show($id)
     {
+        $course = $this->service->find($id);
+        if (!$course) {
+            return response()->json(['message' => 'Course not found'], 404);
+        }
         return new CourseResource($course);
     }
 

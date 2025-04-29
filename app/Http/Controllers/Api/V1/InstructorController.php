@@ -28,7 +28,8 @@ class InstructorController extends Controller
     public function store(StoreInstructorRequest $request)
     {
         $data = $request->validated();
-        $data['password'] = bcrypt($data['password']);
+        $data['password'] = bcrypt('password'); // Default password, change as needed
+        $data['role'] = 'instructor'; // Set role to instructor
         $instructor = $this->instructors->create($data);
         return new InstructorResource($instructor);
     }

@@ -28,4 +28,9 @@ class CourseService
     {
         return $this->repo->destroy($course);
     }
+
+    public function find($id)
+    {
+        return $this->repo->find($id);
+    }
 }
