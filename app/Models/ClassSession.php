@@ -2,22 +2,23 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ClassSession extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'course_id',
-        'class_date',
+        'batch_id',
+        'date',
         'start_time',
         'end_time',
-        'location',
-        'instructor_id',
-        'meeting_link',
+        'meeting_link', // Optional: For online classes
     ];
 
-    public function course()
+    public function batch()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Batch::class);
     }
 }
