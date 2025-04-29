@@ -8,12 +8,15 @@ use Illuminate\Support\Facades\Http;
 
 class ClassSessionService
 {
+    private const MEETING_HOST = 'https://meetservice.dw-digitalplatforms.in';
+    private const MEETING_PATH = '/LMS-Class-';
+
     public function __construct(protected ClassSessionRepository $repo) {}
 
     public function generate(array $data)
     {
         $start = Carbon::parse($data['start_date']);
-        $end = $start->copy()->addWeeks((int) $data['duration_weeks']); // CAST TO INT here
+        $end = $start->copy()->addWeeks((int) $data['duration_weeks']);
         $daysOfWeek = $data['days_of_week'] ?? [];
 
         $sessions = [];
@@ -35,57 +38,23 @@ class ClassSessionService
         return $this->repo->bulkInsert($sessions);
     }
 
-
     public function listByCourse($courseId)
     {
         return $this->repo->getByCourse($courseId);
     }
 
-
-    // get sesion by id
     public function getSessionById($sessionId)
     {
-        // First, check if session already exists locally
         $session = $this->repo->getById($sessionId);
-
-        if (!$session) {
-            throw new \Exception('Session not found');
+        if ($session) {
+            return $session;
         }
-
-
-        // Otherwise, create new Huddle01 meeting dynamically
-        $huddleApiKey = env('HUDDLE_API_KEY');
-
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'x-api-key' => $huddleApiKey,
-        ])->post('https://api.huddle01.com/api/v1/create-room', [
-            'title' => 'Session-' . $sessionId,
-            'roomLocked' => false,
-        ]);
-
-        if (!$response->successful()) {
-            throw new \Exception('Failed to create Huddle01 meeting: ' . $response->body());
-        }
-
-        $roomData = $response->json();
-
-        // Update the session record with new meeting link
-        $session->update([
-            'meeting_link' => $roomData['roomUrl'],
-        ]);
-
-        return [
-            'meeting_link' => $roomData['roomUrl'],
-        ];
     }
-
-
 
     public function startMeeting($sessionId)
     {
         $session = \App\Models\ClassSession::findOrFail($sessionId);
-        $meetingLink = "LMS-Class-{$session->id}-" . time();
+        $meetingLink = self::MEETING_HOST . self::MEETING_PATH . "{$session->id}-" . time();
         $session->update(['meeting_link' => $meetingLink]);
 
         return $session;
