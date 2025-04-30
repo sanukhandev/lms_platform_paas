@@ -139,9 +139,9 @@ class BatchService
 
     // 🔹 Auto Generate Sessions from Weekday Schedule
 
-    public function generateClassSessionsFromSchedule(Batch $batch): void
+    public function generateClassSessionsFromSchedule(Batch $batch, bool $isUpdate): void
     {
-        $startDate = Carbon::parse($batch->start_date);
+        $startDate = $isUpdate ? Carbon::parse($batch->start_date)->startOfDay() : Carbon::now()->startOfDay();
         $endDate = Carbon::parse($batch->end_date);
         $weekDays = $batch->session_days; // ['Monday', 'Wednesday']
         $startTime = Carbon::parse($batch->session_start_time)->format('H:i:s');
@@ -160,5 +160,25 @@ class BatchService
         }
 
         $this->repo->createMultipleClassSessions($batch, $dates);
+    }
+
+    // get batch by course id
+    public function getBatchesByCourseId($courseId)
+    {
+        return $this->repo->getBatchesByCourseId($courseId);
+    }
+
+    public function deleteClassSessions(Batch $batch)
+    {
+        $this->repo->deleteClassSessions($batch);
+    }
+
+    // addStudentsToBatch
+    public function addStudentsToBatch(Batch $batch, array $studentIds)
+    {
+        if (!empty($studentIds)) {
+            $studentIds = array_map('intval', $studentIds);
+            $batch->students()->attach($studentIds);
+        }
     }
 }

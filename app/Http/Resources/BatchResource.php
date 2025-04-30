@@ -25,7 +25,15 @@ class BatchResource extends JsonResource
             'session_days' => $this->session_days,
             'session_start_time' => $this->session_start_time,
             'session_end_time' => $this->session_end_time,
-            'students' => UserResource::collection($this->whenLoaded('students')),
+            'students' => $this->students->map(function ($student) {
+                return [
+                    'id' => $student->id,
+                    'name' => $student->name,
+                    'email' => $student->email,
+                    'status' => $student->pivot->status, // Get status from pivot table
+                    'created_at' => $student->pivot->created_at,
+                ];
+            }),
             'class_sessions' => ClassSessionResource::collection($this->whenLoaded('classSessions')),
         ];
     }

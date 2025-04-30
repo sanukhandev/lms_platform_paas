@@ -138,4 +138,21 @@ class BatchRepository
             ->get()
             ->groupBy('date');
     }
+
+    // get by course id
+    public function getBatchesByCourseId(int $courseId): Collection
+    {
+        return Batch::where('course_id', $courseId)
+            ->with('classSessions')
+            ->get();
+    }
+
+    // deleteClassSessions delete only future class sessions
+
+    public function deleteClassSessions(Batch $batch): int
+    {
+        return $batch->classSessions()
+            ->where('date', '>=', now()->toDateString())
+            ->delete();
+    }
 }

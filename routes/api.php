@@ -28,6 +28,10 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     // 🔹 Batch Routes
     Route::apiResource('batches', BatchController::class);
 
+    // add students to batch
+    Route::put('batches/{batchId}/students', [BatchController::class, 'addStudents']);
+
+
     // 🔹 Class Session Routes (Nested under Batches)
     Route::get('batches/{batchId}/sessions', [ClassSessionController::class, 'index']);
     Route::post('batches/{batchId}/sessions', [ClassSessionController::class, 'store']);
@@ -42,6 +46,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('batches/{batchId}/sessions/range', [ClassSessionController::class, 'byDateRange']);
     Route::get('batches/{batchId}/sessions/by-time', [ClassSessionController::class, 'byTime']);
     Route::get('batches/{batchId}/sessions/by-date/{date}', [ClassSessionController::class, 'byDate']);
+    Route::get('batches/course/{courseId}', [BatchController::class, 'getByCourse']);
 });
 
 
