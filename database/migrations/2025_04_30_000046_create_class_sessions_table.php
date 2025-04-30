@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('class_sessions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->constrained()->onDelete('cascade');
-            $table->date('class_date');
+            $table->foreignId('batch_id')->constrained()->onDelete('cascade');
+            $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
-            $table->string('meeting_link')->nullable();
+            $table->string('meeting_link')->nullable(); // Optional: For online classes
             $table->timestamps();
         });
     }

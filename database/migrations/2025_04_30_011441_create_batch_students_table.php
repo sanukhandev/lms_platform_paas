@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('course_requests', function (Blueprint $table) {
+        Schema::create('batch_students', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('batch_id')->constrained('batches')->onDelete('cascade');
             $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->text('note')->nullable(); // optional message from student
+            $table->string('status')->default('active'); // active, inactive, graduated
+            $table->unique(['batch_id', 'student_id']); // prevent duplicates
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_requests');
+        Schema::dropIfExists('batch_students');
     }
 };

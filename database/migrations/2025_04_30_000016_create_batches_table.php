@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('course_materials', function (Blueprint $table) {
+        Schema::create('batches', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
-            $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
-            $table->string('title');
-            $table->string('file_path');
-            $table->string('mime_type');
-            $table->bigInteger('size');
+            $table->string('name');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->json('session_days'); // ["Monday", "Wednesday"]
+            $table->time('session_start_time');
+            $table->time('session_end_time');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_materials');
+        Schema::dropIfExists('batches');
     }
 };

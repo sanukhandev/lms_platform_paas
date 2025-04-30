@@ -6,18 +6,27 @@ use App\Models\ClassSession;
 
 class ClassSessionRepository
 {
-    public function bulkInsert(array $sessions)
+    // 🔹 ClassSession CRUD
+
+    public function all()
     {
-        return ClassSession::insert($sessions);
+        return ClassSession::all();
     }
 
-    public function getByCourse($courseId)
+    public function store(array $data)
     {
+        return ClassSession::create($data);
+    }
 
-        return ClassSession::with('course.instructor')->where('course_id', $courseId)->orderBy('class_date')->get();
-    }
-    public function getById($sessionId)
+    public function update(ClassSession $classSession, array $data)
     {
-        return ClassSession::with('course.instructor')->findOrFail($sessionId);
+        $classSession->update($data);
+        return $classSession;
     }
+
+    public function destroy(ClassSession $classSession)
+    {
+        return $classSession->delete();
+    }
+
 }

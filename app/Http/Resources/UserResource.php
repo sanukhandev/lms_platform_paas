@@ -4,9 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\User;
 
-class StudentAttendanceResource extends JsonResource
+
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,15 +17,12 @@ class StudentAttendanceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'student_id' => $this->student_id,
-            'session_id' => $this->session_id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'role' => $this->role,
             'status' => $this->status,
             'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
-    }
-
-    public function student()
-    {
-        return $this->belongsTo(User::class, 'student_id');
     }
 }
