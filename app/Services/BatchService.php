@@ -172,4 +172,13 @@ class BatchService
     {
         $this->repo->deleteClassSessions($batch);
     }
+
+    // addStudentsToBatch
+    public function addStudentsToBatch(Batch $batch, array $studentIds)
+    {
+        if (!empty($studentIds)) {
+            $studentIds = array_map('intval', $studentIds);
+            $batch->students()->attach($studentIds);
+        }
+    }
 }

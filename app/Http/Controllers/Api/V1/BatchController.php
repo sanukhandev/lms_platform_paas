@@ -89,4 +89,19 @@ class BatchController extends Controller
         $batches = $this->service->getBatchesByCourseId($courseId);
         return BatchResource::collection($batches);
     }
+
+    // addStudents
+    public function addStudents(Request $request, $batchId)
+    {
+        $batch = $this->service->find($batchId);
+        $studentIds = $request->input('student_ids');
+
+        if (empty($studentIds)) {
+            return response()->json(['message' => 'No student IDs provided'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $this->service->addStudentsToBatch($batch, $studentIds);
+
+        return response()->json(['message' => 'Students added to batch successfully'], Response::HTTP_OK);
+    }
 }
