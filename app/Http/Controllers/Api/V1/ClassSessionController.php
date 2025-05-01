@@ -205,12 +205,12 @@ class ClassSessionController extends Controller
             ->first();
 
         if (!$session) {
-            return response()->json(['message' => 'No active session found.'], 404);
+            return response()->json(['message' => 'Session is not yet started.'], 404);
         }
 
         $studentId = Auth::user()->id;
         if (!$studentId) {
-            return response()->json(['message' => 'Unauthorized.'], 401);
+            return response()->json(['message' => 'Unauthorized access, you are not subscribed to the class'], 401);
         }
 
         if (Auth::user()->role == 'instructor' || Auth::user()->role == 'admin') {
