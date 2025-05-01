@@ -9,6 +9,7 @@ use App\Models\ClassSession;
 use App\Services\BatchService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ClassSessionController extends Controller
 {
@@ -172,5 +173,45 @@ class ClassSessionController extends Controller
 
         return response()->json(['message' => 'Class session cancelled successfully.']);
     }
-    
+
+
+    public function isInSession($roomId)
+    {
+        $currentDate = Carbon::now('Asia/Kolkata')->toDateString();  // Get today's date in IST
+        $currentTime = Carbon::now('Asia/Kolkata')->format('H:i');   // Get the current time in IST (hour:minute)
+        $session = ClassSession::where('id', $roomId)
+            ->where('date', $currentDate) // session should be today
+            ->where(function ($query) use ($currentTime) {
+                $query->where('start_time', '<=', $currentTime)  // session should have started
+                    ->where('end_time', '>=', $currentTime);     // session should still be ongoing
+            })
+            ->first();
+
+        if (!$session) {
+            return response()->json(['message' => 'No active session found.'], 404);
+        }
+
+        $studentId = Auth::user()->id;
+        if (!$studentId) {
+            return response()->json(['message' => 'Unauthorized.'], 401);
+        }
+
+        if (Auth::user()->role == 'instructor' || Auth::user()->role == 'admin') {
+            return response()->json([
+                'valid' => true,
+                'meeting_link' => $session->meeting_link,
+                'now' => Carbon::now('Asia/Kolkata')->toDateTimeString() // send current date and time for debugging
+            ], 200);
+        }
+
+        $batch = $session->batch;  // Get the batch associated with the session
+
+        $isStudentEnrolled = $batch->students()->where('users.id', $studentId)->exists();
+
+        if (!$isStudentEnrolled) {
+            return response()->json(['message' => 'Student not enrolled in this batch.'], 403);
+        }
+
+        return response()->json(['valid' => true, 'meeting_link' => $session->meeting_link]);
+    }
 }
