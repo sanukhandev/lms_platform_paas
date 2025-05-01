@@ -10,6 +10,7 @@ use App\Services\BatchService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UpdateClassSessionRequest;
 
 class ClassSessionController extends Controller
 {
@@ -57,6 +58,22 @@ class ClassSessionController extends Controller
 
         $updated = $this->service->updateClassSession($session, $data);
         return new ClassSessionResource($updated);
+    }
+
+    public function updateStatus(UpdateClassSessionRequest $request, $id)
+    {
+        $session = $this->service->findClassSession($id);
+        $data = $request->validated();
+
+        if ($data['status'] == 'completed') {
+            $session->end_time = Carbon::now('Asia/Kolkata')->format('H:i');
+        }
+        if ($data['status'] == 'cancelled') {
+            $session->end_time = Carbon::now('Asia/Kolkata')->format('H:i');
+        }
+        $session->class_status = $data['status'];
+        $session->save();
+        return new ClassSessionResource($session);
     }
 
     // 🔹 DELETE /sessions/{id}

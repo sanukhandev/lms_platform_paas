@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::apiResource('students', StudentController::class);
 
     Route::get('session/valid/{roomId}', [ClassSessionController::class, 'isInSession']);
-
+    Route::put('session/{id}/status', [ClassSessionController::class, 'updateStatus']);
     // 🔹 Batch Routes
     Route::apiResource('batches', BatchController::class);
 
