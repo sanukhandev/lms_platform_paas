@@ -8,7 +8,6 @@ use App\Repositories\BatchRepository;
 use App\Repositories\CourseRepository;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Illuminate\Support\Facades\Log;
 
 class BatchService
 {
@@ -45,8 +44,6 @@ class BatchService
 
         return $batch;
     }
-
-
 
     public function update(Batch $batch, array $data)
     {
@@ -180,5 +177,34 @@ class BatchService
             $studentIds = array_map('intval', $studentIds);
             $batch->students()->attach($studentIds);
         }
+    }
+
+    // 🔹 Meeting Link and Actions
+
+    public function generateMeetingLink(ClassSession $session)
+    {
+        $roomName = base64_encode($session->id . "--" . $session->batch->id);
+        $meetingLink =  $roomName . "@" . 'UserClassDwDigitalplatforms.In';
+        $session->update(['meeting_link' => $meetingLink]);
+        return $meetingLink;
+    }
+
+    public function rescheduleClassSession(ClassSession $session, array $data)
+    {
+        $session->update($data);
+        return $session;
+    }
+
+    public function cancelClassSession(ClassSession $session)
+    {
+        $session->update(['class_status' => 'cancelled']);
+        $newSession = $this->repo->createClassSession($session->batch, [
+            'date' => Carbon::now()->addDays(7)->format('Y-m-d'), // Example: adding 7 days
+            'start_time' => $session->start_time,
+            'end_time' => $session->end_time,
+            'class_status' => 'scheduled'
+        ]);
+
+        return $newSession;
     }
 }

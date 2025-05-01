@@ -9,6 +9,8 @@ use App\Models\ClassSession;
 use App\Services\BatchService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UpdateClassSessionRequest;
 
 class ClassSessionController extends Controller
 {
@@ -56,6 +58,22 @@ class ClassSessionController extends Controller
 
         $updated = $this->service->updateClassSession($session, $data);
         return new ClassSessionResource($updated);
+    }
+
+    public function updateStatus(UpdateClassSessionRequest $request, $id)
+    {
+        $session = $this->service->findClassSession($id);
+        $data = $request->validated();
+
+        if ($data['status'] == 'completed') {
+            $session->end_time = Carbon::now('Asia/Kolkata')->format('H:i');
+        }
+        if ($data['status'] == 'cancelled') {
+            $session->end_time = Carbon::now('Asia/Kolkata')->format('H:i');
+        }
+        $session->class_status = $data['status'];
+        $session->save();
+        return new ClassSessionResource($session);
     }
 
     // 🔹 DELETE /sessions/{id}
@@ -137,5 +155,80 @@ class ClassSessionController extends Controller
         );
 
         return ClassSessionResource::collection($sessions);
+    }
+
+
+    // 🔹 POST /sessions/{id}/generate-meeting-lin
+    public function generateMeetingLink($id)
+    {
+        $session = $this->service->findClassSession($id);
+        $meetingLink = $this->service->generateMeetingLink($session);
+
+        return response()->json(['meeting_link' => $meetingLink]);
+    }
+
+    // 🔹 POST /sessions/{id}/reschedule
+    public function reschedule(Request $request, $id)
+    {
+        $session = $this->service->findClassSession($id);
+
+        $data = $request->validate([
+            'date' => ['required', 'date'],
+            'start_time' => ['required', 'date_format:H:i'],
+            'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
+        ]);
+
+        $updated = $this->service->rescheduleClassSession($session, $data);
+        return new ClassSessionResource($updated);
+    }
+
+    // 🔹 POST /sessions/{id}/cancel
+    public function cancel($id)
+    {
+        $session = $this->service->findClassSession($id);
+        $this->service->cancelClassSession($session);
+
+        return response()->json(['message' => 'Class session cancelled successfully.']);
+    }
+
+
+    public function isInSession($roomId)
+    {
+        $currentDate = Carbon::now('Asia/Kolkata')->toDateString();  // Get today's date in IST
+        $currentTime = Carbon::now('Asia/Kolkata')->format('H:i');   // Get the current time in IST (hour:minute)
+        $session = ClassSession::where('id', $roomId)
+            ->where('date', $currentDate) // session should be today
+            ->where(function ($query) use ($currentTime) {
+                $query->where('start_time', '<=', $currentTime)  // session should have started
+                    ->where('end_time', '>=', $currentTime);     // session should still be ongoing
+            })
+            ->first();
+
+        if (!$session) {
+            return response()->json(['message' => 'Session is not yet started.'], 404);
+        }
+
+        $studentId = Auth::user()->id;
+        if (!$studentId) {
+            return response()->json(['message' => 'Unauthorized access, you are not subscribed to the class'], 401);
+        }
+
+        if (Auth::user()->role == 'instructor' || Auth::user()->role == 'admin') {
+            return response()->json([
+                'valid' => true,
+                'meeting_link' => $session->meeting_link,
+                'now' => Carbon::now('Asia/Kolkata')->toDateTimeString() // send current date and time for debugging
+            ], 200);
+        }
+
+        $batch = $session->batch;  // Get the batch associated with the session
+
+        $isStudentEnrolled = $batch->students()->where('users.id', $studentId)->exists();
+
+        if (!$isStudentEnrolled) {
+            return response()->json(['message' => 'Student not enrolled in this batch.'], 403);
+        }
+
+        return response()->json(['valid' => true, 'meeting_link' => $session->meeting_link]);
     }
 }

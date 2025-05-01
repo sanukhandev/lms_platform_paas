@@ -25,6 +25,8 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::apiResource('instructors', InstructorController::class);
     Route::apiResource('students', StudentController::class);
 
+    Route::get('session/valid/{roomId}', [ClassSessionController::class, 'isInSession']);
+    Route::put('session/{id}/status', [ClassSessionController::class, 'updateStatus']);
     // 🔹 Batch Routes
     Route::apiResource('batches', BatchController::class);
 
@@ -39,6 +41,11 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::put('sessions/{id}', [ClassSessionController::class, 'update']);
     Route::delete('sessions/{id}', [ClassSessionController::class, 'destroy']);
 
+
+    // genertae routes form generate meeting link, pospone class cance calls with class session controller with session id
+    Route::post('sessions/{id}/generate-meeting-link', [ClassSessionController::class, 'generateMeetingLink']);
+    Route::post('sessions/{id}/reschedule', [ClassSessionController::class, 'reschedule']);
+    Route::post('sessions/{id}/cancel', [ClassSessionController::class, 'cancel']);
     // 🔹 Extra Class Session Routes
     Route::get('batches/{batchId}/sessions/today', [ClassSessionController::class, 'today']);
     Route::get('batches/{batchId}/sessions/upcoming', [ClassSessionController::class, 'upcoming']);
