@@ -183,9 +183,8 @@ class BatchService
 
     public function generateMeetingLink(ClassSession $session)
     {
-        $jitsiBaseUrl = 'https://meetservice.dw-digitalplatforms.in/'; // Replace with your Jitsi URL
-        $roomName = 'class-session-' . $session->id;
-        $meetingLink = $jitsiBaseUrl . '/' . $roomName;
+        $roomName = base64_encode($session->id . "--" . $session->batch->id);
+        $meetingLink =  $roomName . "@" . 'UserClassDwDigitalplatforms.In';
         $session->update(['meeting_link' => $meetingLink]);
         return $meetingLink;
     }
