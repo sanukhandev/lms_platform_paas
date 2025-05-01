@@ -20,6 +20,8 @@ class ClassSessionResource extends JsonResource
             'date' => $this->date,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
+            'class_status' => $this->class_status,
+            'meeting_link' => $this->meeting_link,
             'topic' => $this->topic,
             'notes' => $this->notes,
         ];

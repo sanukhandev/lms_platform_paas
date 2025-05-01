@@ -138,4 +138,39 @@ class ClassSessionController extends Controller
 
         return ClassSessionResource::collection($sessions);
     }
+
+
+    // 🔹 POST /sessions/{id}/generate-meeting-lin
+    public function generateMeetingLink($id)
+    {
+        $session = $this->service->findClassSession($id);
+        $meetingLink = $this->service->generateMeetingLink($session);
+
+        return response()->json(['meeting_link' => $meetingLink]);
+    }
+
+    // 🔹 POST /sessions/{id}/reschedule
+    public function reschedule(Request $request, $id)
+    {
+        $session = $this->service->findClassSession($id);
+
+        $data = $request->validate([
+            'date' => ['required', 'date'],
+            'start_time' => ['required', 'date_format:H:i'],
+            'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
+        ]);
+
+        $updated = $this->service->rescheduleClassSession($session, $data);
+        return new ClassSessionResource($updated);
+    }
+
+    // 🔹 POST /sessions/{id}/cancel
+    public function cancel($id)
+    {
+        $session = $this->service->findClassSession($id);
+        $this->service->cancelClassSession($session);
+
+        return response()->json(['message' => 'Class session cancelled successfully.']);
+    }
+    
 }
