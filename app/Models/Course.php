@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\CourseCategory;
 
 class Course extends Model
 {
@@ -15,6 +17,10 @@ class Course extends Model
         'category_id',
     ];
 
+    protected $casts = [
+        'syllabus' => 'array', // because syllabus is an array (JSON)
+    ];
+
     public function instructor()
     {
         return $this->belongsTo(User::class, 'instructor_id');
@@ -24,8 +30,4 @@ class Course extends Model
     {
         return $this->belongsTo(CourseCategory::class, 'category_id');
     }
-
-    protected $casts = [
-        'syllabus' => 'array', // because syllabus is an array (JSON)
-    ];
 }

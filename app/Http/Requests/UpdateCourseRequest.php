@@ -22,11 +22,12 @@ class UpdateCourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'instructor_id' => 'nullable|exists:users,id',
-            'duration_weeks' => 'required|integer|min:1',
-            'syllabus' => 'nullable|array',
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|nullable|string',
+            'instructor_id' => 'sometimes|nullable|exists:users,id',
+            'duration_weeks' => 'sometimes|required|integer|min:1',
+            'syllabus' => 'sometimes|nullable|array',
+            'category_id' => 'sometimes|nullable|exists:course_categories,id',
         ];
     }
 }

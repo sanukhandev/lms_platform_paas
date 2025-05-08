@@ -27,6 +27,7 @@ class StoreCourseRequest extends FormRequest
             'instructor_id' => 'nullable|exists:users,id',
             'duration_weeks' => 'required|integer|min:1',
             'syllabus' => 'nullable|array',
+            'category_id' => 'nullable|exists:course_categories,id',
         ];
     }
 }
