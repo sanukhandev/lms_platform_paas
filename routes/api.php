@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\{
     AuthController,
     CourseController,
+    CourseCategoryController,
     InstructorController,
     StudentController,
     BatchController,
@@ -27,6 +28,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     // 🔹 Resource Routes
     Route::apiResources([
         'courses' => CourseController::class,
+        'course-categories' => CourseCategoryController::class,
         'instructors' => InstructorController::class,
         'students' => StudentController::class,
         'batches' => BatchController::class,
