@@ -23,6 +23,8 @@ class CourseResource extends JsonResource
             'duration_weeks' => $this->duration_weeks,
             'syllabus' => $this->syllabus,
             'instructor' => $this->whenLoaded('instructor'),
+            'category' => $this->whenLoaded('category'),
+            'category_id' => $this->category_id,
         ];
     }
 }

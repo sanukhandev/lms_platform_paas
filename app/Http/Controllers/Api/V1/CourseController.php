@@ -16,33 +16,55 @@ class CourseController extends Controller
 
     public function index()
     {
-        return CourseResource::collection($this->service->list());
+        return response()->json([
+            'success' => true,
+            'data' => CourseResource::collection($this->service->list()),
+            'message' => 'Courses retrieved successfully'
+        ]);
     }
 
     public function store(StoreCourseRequest $request)
     {
         $course = $this->service->create($request->validated());
-        return new CourseResource($course);
+        return response()->json([
+            'success' => true,
+            'data' => new CourseResource($course),
+            'message' => 'Course created successfully'
+        ], 201);
     }
     
     public function show($id)
     {
         $course = $this->service->find($id);
         if (!$course) {
-            return response()->json(['message' => 'Course not found'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'Course not found'
+            ], 404);
         }
-        return new CourseResource($course);
+        return response()->json([
+            'success' => true,
+            'data' => new CourseResource($course),
+            'message' => 'Course retrieved successfully'
+        ]);
     }
 
     public function update(UpdateCourseRequest $request, Course $course)
     {
         $updated = $this->service->update($course, $request->validated());
-        return new CourseResource($updated);
+        return response()->json([
+            'success' => true,
+            'data' => new CourseResource($updated),
+            'message' => 'Course updated successfully'
+        ]);
     }
 
     public function destroy(Course $course)
     {
         $this->service->delete($course);
-        return response()->json(['message' => 'Deleted successfully']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Course deleted successfully'
+        ]);
     }
 }

@@ -8,7 +8,7 @@ class CourseRepository
 {
     public function all()
     {
-        return Course::with('instructor')->get();
+        return Course::with(['instructor', 'category'])->get();
     }
 
     public function store(array $data)
@@ -29,6 +29,6 @@ class CourseRepository
 
     public function find($id)
     {
-        return Course::with('instructor')->findOrFail($id);
+        return Course::with(['instructor', 'category'])->findOrFail($id);
     }
 }

@@ -3,15 +3,16 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class StoreCourseRequest extends FormRequest
+class StoreCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return \Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()?->role === 'admin';
+        return Auth::check() && Auth::user()?->role === 'admin';
     }
 
     /**
@@ -22,12 +23,10 @@ class StoreCourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'instructor_id' => 'nullable|exists:users,id',
-            'duration_weeks' => 'required|integer|min:1',
-            'syllabus' => 'nullable|array',
-            'category_id' => 'nullable|exists:course_categories,id',
+            'parent_id' => 'nullable|exists:course_categories,id',
         ];
     }
 }
+
