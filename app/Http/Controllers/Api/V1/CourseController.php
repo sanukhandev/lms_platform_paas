@@ -32,7 +32,7 @@ class CourseController extends Controller
             'message' => 'Course created successfully'
         ], 201);
     }
-    
+
     public function show($id)
     {
         $course = $this->service->find($id);
@@ -49,12 +49,19 @@ class CourseController extends Controller
         ]);
     }
 
-    public function update(UpdateCourseRequest $request, Course $course)
+    public function update(UpdateCourseRequest $request)
     {
-        $updated = $this->service->update($course, $request->validated());
+        $course = $this->service->find($request->id);
+        if (!$course) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Course not found'
+            ], 404);
+        }
+        $course = $this->service->update($course, $request->validated());
         return response()->json([
             'success' => true,
-            'data' => new CourseResource($updated),
+            'data' => new CourseResource($course),
             'message' => 'Course updated successfully'
         ]);
     }
