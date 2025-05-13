@@ -194,6 +194,7 @@ class ClassSessionController extends Controller
 
     public function isInSession($roomId)
     {
+        
         $currentDate = Carbon::now('Asia/Kolkata')->toDateString();  // Get today's date in IST
         $currentTime = Carbon::now('Asia/Kolkata')->format('H:i');   // Get the current time in IST (hour:minute)
         $session = ClassSession::where('id', $roomId)
