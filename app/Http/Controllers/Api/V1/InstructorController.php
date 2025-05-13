@@ -55,4 +55,18 @@ class InstructorController extends Controller
         $this->instructors->delete($instructor);
         return response()->json(['message' => 'Instructor deleted successfully']);
     }
+
+    public function getOverview()
+    {
+        $overview = $this->instructors->getOverview();
+        return response()->json($overview);
+    }
+
+    public function getClasses()
+    {
+        // get filter from url params
+        $filter = request()->query('filter');
+        $classes = $this->instructors->getClasses($filter);
+        return response()->json($classes);
+    }
 }

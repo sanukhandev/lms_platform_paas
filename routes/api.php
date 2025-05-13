@@ -34,6 +34,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         'batches' => BatchController::class,
     ]);
 
+    Route::get('instructor/overview', [InstructorController::class, 'getOverview']);
+    Route::get('instructor/classes', [InstructorController::class, 'getClasses']);
+
     // 🔹 Batch Specific
     Route::put('batches/{batchId}/students', [BatchController::class, 'addStudents']);
     Route::get('batches/course/{courseId}', [BatchController::class, 'getByCourse']);
